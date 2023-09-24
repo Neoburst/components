@@ -1,0 +1,12 @@
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+// import nb table styles
+@import "../projects/nb-table/src/styles/nb-table";
+
+html {
+  font-family: Ebrima, sans-serif;
+  font-size: 14px;
+}
+
+body {
+  margin: 0;
+}

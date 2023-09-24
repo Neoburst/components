@@ -1,0 +1,7 @@
+<div class="nb-table-sort">
+  <ng-content></ng-content>
+</div>
+<nb-icon class="sort-icon"
+         [ngClass]="{ 'active': !!activeSort(), 'disabled': disabled }"
+         [icon]="directionIcon()"
+         (click)="!disabled && setSort()"></nb-icon>

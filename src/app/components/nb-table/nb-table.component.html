@@ -1,0 +1,35 @@
+<ng-container *ngIf="(datasource$ | async) as datasource">
+  <span>Neoburst table</span>
+
+  <nb-table [dataSource]="datasource.entities"
+            (sortedColumns)="sortByColumns($event)">
+    <ng-container *ngFor="let column of columns; let index = index">
+      <th *nbColumnHeader="column"
+          [nbHeaderCell]="column"
+          [nbHeaderCellResize]="column !== 'Age'"
+          [nbHeaderCellSize]="column === 'Age' ? 50 : undefined"
+          [nb-table-sort]="column"
+          [nb-sort-disabled]="column === 'Action'"
+          style="cursor: pointer;">
+        {{ column }}
+      </th>
+      <td *nbColumnCell="column; let dataItem = dataItem; let row = row"
+          [nbCell]="column"
+          [nbCellRow]="row">
+        <ng-container *ngIf="column === 'Action'; else default">
+          <button (click)="$event.stopPropagation(); toggleRow(row)">Toggle</button>
+        </ng-container>
+        <ng-template #default>
+          {{ dataItem[column.toLowerCase()] }}
+        </ng-template>
+      </td>
+    </ng-container>
+
+    <tr *nbHeaderRow></tr>
+    <tr *nbRow
+        nbTableRow
+        (click)="clickRow($event)"></tr>
+    <tr *nbRow="let row = row"
+        [nbExpandableRow]="row === expandedRow">Expandable row {{ row }}</tr>
+  </nb-table>
+</ng-container>

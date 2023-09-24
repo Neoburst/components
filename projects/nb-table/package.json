@@ -1,0 +1,26 @@
+{
+  "name": "@neoburst/table",
+  "version": "1.1.0",
+  "scripts": {
+    "pack": "ng-packagr -p ng-package.json"
+  },
+  "peerDependencies": {
+    "@angular/animations": "^16.2.0",
+    "@angular/cdk": "^16.2.0",
+    "@angular/common": "^16.2.0",
+    "@angular/core": "^16.2.0",
+    "rxjs": "~7.8.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "exports": {
+    ".": {
+      "sass": "./src/styles/_nb-table.scss",
+      "asset": "./src/assets/*"
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Jest: Debug current file",
+      "program": "${workspaceFolder}/node_modules/@angular/cli/bin/ng",
+      "cwd": "${workspaceFolder}",
+      "args": ["test", "${input:projectName}", "--test-path-pattern=${fileBasenameNoExtension}", "--run-in-band"],
+      "console": "integratedTerminal",
+      "disableOptimisticBPs": true
+    }
+  ],
+  "inputs": [
+    {
+      "id": "projectName",
+      "description": "project to test",
+      "type": "pickString",
+      "options": ["nb-table"],
+      "default": "nb-table"
+    }
+  ]
+}

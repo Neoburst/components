@@ -1,0 +1,50 @@
+<div class="nb-header-drop"
+     [ngClass]="{ 'has-data': selectedHeaders.length }"
+     (drop)="drop($event)"
+     (dragover)="dragOver($event)"
+     (dragenter)="dragEnter($event)"
+     (dragleave)="dragLeave($event)">
+  <div *ngFor="let header of selectedHeaders; let index = index"
+       class="nb-selected-header"
+       [attr.headerindex]="index"
+       draggable="true"
+       (dragstart)="onDrag($event, header, index)"
+       (dragenter)="rearrangeHeaders($event, index)">
+    <span class="header-name">{{ header }}</span>
+    <nb-icon class="remove-header"
+             icon="x-circle"
+             (click)="removeHeader(index)"></nb-icon>
+  </div>
+</div>
+
+<div *ngIf="dataSourceSig() as dataSource"
+     class="nb-table"
+     [style.--columnTemplate]="columnTemplate"
+     #nbTable>
+
+  <!-- Table header -->
+  <ng-container *ngFor="let headerRow of headerRows">
+    <!-- Header columns -->
+    <ng-container *ngFor="let columnHeader of columnHeaders"
+                  [ngTemplateOutlet]="columnHeader.template"
+                  [ngTemplateOutletContext]="{ $implicit: headerRow.template }">
+    </ng-container>
+  </ng-container>
+
+  <!-- Table rows -->
+  <ng-container *ngFor="let dataItem of dataSource; let rowIndex = index">
+    <ng-container *ngFor="let row of tableRows"
+                  [ngTemplateOutlet]="row.template">
+      <ng-container *ngFor="let cell of tableCells"
+                    [ngTemplateOutlet]="cell.template"
+                    [ngTemplateOutletContext]="{ dataItem: dataItem, row: rowIndex }">
+      </ng-container>
+    </ng-container>
+
+    <ng-container *ngFor="let expandableRow of expandableRows"
+                  [ngTemplateOutlet]="expandableRow.template"
+                  [ngTemplateOutletContext]="{ dataItem: dataItem, row: rowIndex }">
+    </ng-container>
+
+  </ng-container>
+</div>

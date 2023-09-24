@@ -1,0 +1,9 @@
+.nb-icon {
+  width: var(--icon-size, 16px);
+  height: var(--icon-size, 16px);
+  stroke: var(--icon-color, var(--nb-icon-color));
+  stroke-width: var(--icon-stroke-width, 1);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
