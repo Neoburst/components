@@ -15,8 +15,7 @@ import {
   providers: [PeopleService],
 })
 export class NbTableComponent implements OnInit, AfterViewInit {
-  @Input() columns!: string[];
-
+  columns: string[] = [...Object.keys(new Person()).map(x => x[0].toUpperCase().concat(x.substring(1))), 'Action'];
   datasource$!: Observable<Datasource<Person>>;
   expandedRow: number | undefined = undefined;
 

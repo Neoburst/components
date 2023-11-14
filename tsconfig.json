@@ -10,6 +10,9 @@
     "declaration": false,
     "downlevelIteration": true,
     "paths": {
+      "nb-form-field": [
+        "dist/nb-form-field"
+      ],
       "nb-input": [
         "dist/nb-input"
       ],

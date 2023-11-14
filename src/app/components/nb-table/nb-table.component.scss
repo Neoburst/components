@@ -1,0 +1,25 @@
+:host {
+  display: block;
+}
+
+nb-table {
+  --nb-column-header-color: #da4167;
+  --nb-column-header-text-color: #fff;
+  --nb-column-header-resize-color: #e68fa5;
+  --nb-row-color: #22252c;
+  --nb-row-border-color: #ffffff33;
+  --nb-row-hover-color: #da416777;
+  --nb-expanding-row-color: #171a21;
+  --nb-selected-header-color: #22252c;
+}
+
+.expand-btn {
+  background-color: var(--nb-column-header-color);
+  border: none;
+  border-radius: 5px;
+  color: inherit;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 14px;
+  padding: 5px;
+}

@@ -1,14 +1,10 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
-  selector: 'lib-nb-input',
-  template: `
-    <p>
-      nb-input works!
-    </p>
-  `,
-  styles: [
-  ]
+  selector: 'nb-input',
+  templateUrl: './nb-input.component.html',
+  styleUrls: ['./nb-input.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NbInputComponent {
 
