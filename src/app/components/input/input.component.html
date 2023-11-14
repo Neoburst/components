@@ -1,0 +1,73 @@
+<h4 class="neo-header">Neoburst input</h4>
+<!-- <nb-input></nb-input> -->
+
+<div class="flex flex-row align-items-center">
+  <nb-form-field>
+    <nb-label>Formcontrol</nb-label>
+    <input nbInput
+           [formControl]="control">
+  </nb-form-field>
+  {{ control.value }}
+</div>
+
+<div class="flex flex-row align-items-center">
+  <nb-form-field>
+    <nb-label>Error</nb-label>
+    <input nbInput
+           [formControl]="errorControl"
+           type="number">
+  </nb-form-field>
+  {{ errorControl.value }}
+</div>
+
+<div class="flex flex-row align-items-center"
+     [formGroup]="form">
+  <nb-form-field>
+    <nb-label>Formcontrolname</nb-label>
+    <input nbInput
+           formControlName="foo">
+  </nb-form-field>
+
+  {{ form.get('foo')?.value }}
+</div>
+
+<div class="flex flex-row align-items-center">
+  <nb-form-field>
+    <nb-label>NgModel</nb-label>
+    <input nbInput
+           [(ngModel)]="ngModelValue">
+  </nb-form-field>
+
+  {{ ngModelValue }}
+</div>
+
+<div class="flex flex-row align-items-center">
+  <nb-form-field>
+    <nb-label>Static (disabled) input</nb-label>
+    <input #staticInput
+           nbInput
+           [value]="'Static value'"
+           [disabled]="true">
+  </nb-form-field>
+
+  {{ staticInput.value }}
+</div>
+
+<div class="flex flex-row align-items-center">
+  <nb-form-field>
+    <nb-label>Empty input</nb-label>
+    <input #emptyInput
+           nbInput
+           required>
+  </nb-form-field>
+
+  {{ emptyInput.value }}
+</div>
+
+<div class="flex flex-row align-items-center">
+  <nb-form-field>
+    <nb-label nbFloatLabel>Floating label</nb-label>
+    <input nbInput
+           [disabled]="true">
+  </nb-form-field>
+</div>

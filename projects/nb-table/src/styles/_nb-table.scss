@@ -3,8 +3,8 @@
   color: var(--nb-column-header-text-color);
   display: flex;
   padding: 10px;
-  text-align: start;
   position: sticky;
+  text-align: start;
   top: 0;
 
   &:hover {
@@ -14,14 +14,14 @@
   }
 
   .nb-column-resize {
-    display: inline-block;
-    position: absolute;
-    height: 100%;
     border-right: 2px solid var(--nb-column-header-resize-color);
-    top: 0;
-    right: 0;
     cursor: col-resize;
+    display: inline-block;
+    height: 100%;
     opacity: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
     transition: opacity 0.3s ease-in-out;
 
     :hover {
@@ -31,8 +31,10 @@
 }
 
 .nb-table-cell {
-  padding: 5px 10px;
+  align-items: center;
   border-bottom: 1px solid var(--nb-row-border-color);
+  display: flex;
+  padding: 5px 10px;
   transition: background-color 0.5s ease-in-out;
   transition-delay: -0.2s;
 
@@ -58,10 +60,10 @@
 }
 
 .nb-expandable-row {
-  grid-column: 1/-1;
   background-color: var(--nb-expanding-row-color);
-  overflow: hidden;
+  grid-column: 1/-1;
   max-height: 0px;
+  overflow: hidden;
   padding: 0px 5px;
   transition:
     max-height 0.3s ease-in-out,

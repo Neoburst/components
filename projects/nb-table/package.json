@@ -4,9 +4,16 @@
   "scripts": {
     "pack": "ng-packagr -p ng-package.json"
   },
+  "keywords": [
+    "angular",
+    "angular 2",
+    "angular table",
+    "data table",
+    "neoburst",
+    "reactive table"
+  ],
   "peerDependencies": {
     "@angular/animations": "^16.2.0",
-    "@angular/cdk": "^16.2.0",
     "@angular/common": "^16.2.0",
     "@angular/core": "^16.2.0",
     "rxjs": "~7.8.1"
@@ -22,5 +29,9 @@
       "sass": "./src/styles/_nb-table.scss",
       "asset": "./src/assets/*"
     }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Neoburst/components/tree/main/projects/nb-table"
   }
 }

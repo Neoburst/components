@@ -1,4 +1,3 @@
-import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -25,7 +24,7 @@ import {
     NbTableRowDirective,
     NbExpandableRowDirective
   ],
-  imports: [CommonModule, DragDropModule],
+  imports: [CommonModule],
   exports: [
     NbTableDirective,
     NbColumnHeaderDirective,

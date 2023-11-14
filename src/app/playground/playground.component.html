@@ -1,0 +1,10 @@
+<nav class="side-nav">
+  <span class="nav-header neo-header">Components</span>
+  <ng-container *ngFor="let component of components">
+    <span class="nav-item neo-header"
+          [ngClass]="{ 'active': activeComponent() === component.route }"
+          (click)="routeTo(component.route)">{{ component.name }}</span>
+  </ng-container>
+  <span style="margin-bottom: auto;"></span>
+</nav>
+<router-outlet></router-outlet>

@@ -1,11 +1,12 @@
 <ng-container *ngIf="(datasource$ | async) as datasource">
-  <span>Neoburst table</span>
+  <h4 class="neo-header">Neoburst table</h4>
 
   <nb-table [dataSource]="datasource.entities"
             (sortedColumns)="sortByColumns($event)">
     <ng-container *ngFor="let column of columns; let index = index">
       <th *nbColumnHeader="column"
           [nbHeaderCell]="column"
+          [nbHeaderCellDrag]="true"
           [nbHeaderCellResize]="column !== 'Age'"
           [nbHeaderCellSize]="column === 'Age' ? 50 : undefined"
           [nb-table-sort]="column"
@@ -17,7 +18,8 @@
           [nbCell]="column"
           [nbCellRow]="row">
         <ng-container *ngIf="column === 'Action'; else default">
-          <button (click)="$event.stopPropagation(); toggleRow(row)">Toggle</button>
+          <button class="expand-btn"
+                  (click)="$event.stopPropagation(); toggleRow(row)">Toggle</button>
         </ng-container>
         <ng-template #default>
           {{ dataItem[column.toLowerCase()] }}

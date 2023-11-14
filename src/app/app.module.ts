@@ -1,16 +1,18 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { MatTableModule } from '@angular/material/table';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { NgTableComponent } from './components/ng-table/ng-table.component';
 import { NbTableComponent } from './components/nb-table/nb-table.component';
-import { NbTableModule } from 'projects/nb-table/src/public-api';
+import { PlaygroundComponent } from './playground/playground.component';
+import { InputComponent } from './components/input/input.component';
+import { NbInputModule } from 'projects/nb-input/src/lib/nb-input.module';
+import { NbTableModule } from 'projects/nb-table/src/lib/nb-table.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [AppComponent, NgTableComponent, NbTableComponent],
-  imports: [BrowserModule, AppRoutingModule, MatTableModule, NbTableModule],
+  declarations: [AppComponent, NbTableComponent, PlaygroundComponent, InputComponent],
+  imports: [AppRoutingModule, BrowserModule, FormsModule, NbInputModule, NbTableModule, ReactiveFormsModule],
   providers: [],
   bootstrap: [AppComponent],
 })

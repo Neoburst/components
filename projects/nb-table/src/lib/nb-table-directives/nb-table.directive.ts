@@ -30,7 +30,7 @@ export class NbTableDirective implements INbTableDirective {
     { provide: NbTableDirective, useExisting: NbColumnHeaderDirective },
   ],
 })
-export class NbColumnHeaderDirective implements NbTableDirective {
+export class NbColumnHeaderDirective implements INbTableDirective {
   @Input({ alias: 'nbColumnHeader', required: true }) column!: string;
 
   constructor (
