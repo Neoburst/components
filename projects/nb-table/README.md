@@ -1,6 +1,25 @@
-<p align="center">
-<img width="50%" src="src/assets/neoburst_logo_text.svg">
-</p>
+<style>
+.title {
+  border: 1px solid #000;
+  border-radius: 60px;
+  box-sizing: border-box;
+  flex: 1;
+  font-family: 'Unbounded', sans-serif;
+  font-size: calc(25px + 4vw);
+  font-weight: bold;
+  height: auto;
+  justify-content: center;
+  line-height: 1.1em;
+  margin: 0 10vw;
+  max-width: 1000px;
+  padding: 20px 60px;
+  z-index: 1;
+}
+</style>
+
+<div align="center">
+  <div class="title">NEOBURST</div>
+</div>
 
 ##### Introducing @neoburst/table: Your Angular Data Management Solution
 

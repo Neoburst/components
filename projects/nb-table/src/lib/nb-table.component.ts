@@ -183,6 +183,7 @@ export class NbTableComponent<T> implements OnInit, OnDestroy {
 
   removeHeader(index: number): void {
     this.selectedHeaders.splice(index, 1);
+    this.selectedHeaders = [...this.selectedHeaders];
     this._rearrangeColumns();
   }
 

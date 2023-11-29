@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.json",
+  "files": [],
+  "include": [],
+  "compilerOptions": { "noImplicitAny": true, "strict": true },
+  "references": [
+    {
+      "path": "./tsconfig.lib.json"
+    },
+    {
+      "path": "./tsconfig.spec.json"
+    }
+  ]
+}

@@ -16,12 +16,14 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
             "outputPath": "dist/neoburst-table",
             "index": "src/index.html",
-            "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
+            "browser": "src/main.ts",
+            "polyfills": [
+              "src/polyfills.ts"
+            ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
@@ -31,9 +33,7 @@
               "src/styles.scss"
             ],
             "scripts": [],
-            "vendorChunk": true,
             "extractLicenses": false,
-            "buildOptimizer": false,
             "sourceMap": true,
             "optimization": false,
             "namedChunks": true
@@ -51,8 +51,6 @@
               "sourceMap": false,
               "namedChunks": false,
               "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
               "budgets": [
                 {
                   "type": "initial",
@@ -72,18 +70,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "neoburst-table:build"
+            "buildTarget": "neoburst-table:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "neoburst-table:build:production"
+              "buildTarget": "neoburst-table:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "neoburst-table:build"
+            "buildTarget": "neoburst-table:build"
           }
         },
         "test": {
@@ -119,14 +117,14 @@
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
-            "project": "projects/nb-table/ng-package.json"
+            "project": "ng-package.json"
           },
           "configurations": {
             "production": {
-              "tsConfig": "projects/nb-table/tsconfig.lib.prod.json"
+              "tsConfig": "tsconfig.lib.prod.json"
             },
             "development": {
-              "tsConfig": "projects/nb-table/tsconfig.lib.json"
+              "tsConfig": "tsconfig.lib.json"
             }
           },
           "defaultConfiguration": "production"
@@ -134,7 +132,7 @@
         "test": {
           "builder": "@angular-builders/jest:run",
           "options": {
-            "tsConfig": "projects/nb-table/tsconfig.spec.json",
+            "tsConfig": "tsconfig.spec.json",
             "polyfills": [
               "zone.js",
               "zone.js/testing"
@@ -152,14 +150,14 @@
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
-            "project": "projects/nb-input/ng-package.json"
+            "project": "ng-package.json"
           },
           "configurations": {
             "production": {
-              "tsConfig": "projects/nb-input/tsconfig.lib.prod.json"
+              "tsConfig": "tsconfig.lib.prod.json"
             },
             "development": {
-              "tsConfig": "projects/nb-input/tsconfig.lib.json"
+              "tsConfig": "tsconfig.lib.json"
             }
           },
           "defaultConfiguration": "production"
@@ -167,7 +165,7 @@
         "test": {
           "builder": "@angular-builders/jest:run",
           "options": {
-            "tsConfig": "projects/nb-input/tsconfig.spec.json",
+            "tsConfig": "tsconfig.spec.json",
             "polyfills": [
               "zone.js",
               "zone.js/testing"
