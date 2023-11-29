@@ -77,7 +77,7 @@ export class NbTableService<T> {
   }
 
   setSelectedColumns(columns: string[]): void {
-    this._selectedColumns.set(columns);
+    this._selectedColumns.update(_ => columns);
   }
 
   setTableRows(rows: NbTableRowDirective[]): void {
@@ -115,30 +115,33 @@ export class NbTableService<T> {
 
   setColumnSort(sort: NbSort): void {
     this._tableSorts.update((activeSorts) => {
-      const index = activeSorts.findIndex((s) => s.column === sort.column);
-      if (index >= 0) activeSorts.splice(index, 1, sort);
-      else activeSorts = [...activeSorts, sort];
+      let sorts = [...activeSorts];
+      const index = sorts.findIndex((s) => s.column === sort.column);
+      if (index >= 0) sorts.splice(index, 1, sort);
+      else sorts = [...sorts, sort];
 
-      return activeSorts;
+      return sorts;
     });
   }
 
   removeColumnSort(column: string): void {
     this._tableSorts.update((activeSorts) => {
-      const index = activeSorts.findIndex((s) => s.column === column);
-      if (index >= 0) activeSorts.splice(index, 1);
+      let sorts = [...activeSorts];
+      const index = sorts.findIndex((s) => s.column === column);
+      if (index >= 0) sorts.splice(index, 1);
 
-      return activeSorts;
+      return sorts;
     });
   }
 
   setColumnWidth(columnWidth: NbColumnWidth): void {
     this._columnWidths.update((columnWidths) => {
-      const index = columnWidths.findIndex((c) => c.column === columnWidth.column);
-      if (index >= 0) columnWidths.splice(index, 1, columnWidth);
-      else columnWidths = [...columnWidths, columnWidth];
+      let widths = [...columnWidths];
+      const index = widths.findIndex((c) => c.column === columnWidth.column);
+      if (index >= 0) widths.splice(index, 1, columnWidth);
+      else widths = [...widths, columnWidth];
 
-      return columnWidths;
+      return widths;
     });
   }
 
