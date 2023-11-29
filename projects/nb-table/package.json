@@ -1,6 +1,6 @@
 {
   "name": "@neoburst/table",
-  "version": "2.0.0",
+  "version": "2.0.3",
   "scripts": {
     "pack": "ng-packagr -p ng-package.json"
   },
@@ -26,7 +26,8 @@
   },
   "exports": {
     ".": {
-      "sass": "./src/styles/_nb-table.scss"
+      "sass": "./src/styles/_nb-table.scss",
+      "asset": "./src/assets/*"
     }
   },
   "repository": {
