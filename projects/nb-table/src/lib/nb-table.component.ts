@@ -42,6 +42,7 @@ interface DragHeaderEvent {
   templateUrl: './nb-table.component.html',
   styleUrls: ['./nb-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [NbTableService]
 })
 export class NbTableComponent<T> implements OnInit, OnDestroy {
   @Input() set dataSource(source: NbTableDatasource<T>) {
