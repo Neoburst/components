@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Neoburst All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file in the root of the source tree.
+ */
+
 import { Component, Input } from '@angular/core';
 
 @Component({

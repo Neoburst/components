@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Neoburst All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file in the root of the source tree.
+ */
+
 import { Injectable, Injector, Signal, WritableSignal, computed, signal } from '@angular/core';
 import { distinctUntilChanged, map, Observable, Subject } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -64,6 +72,11 @@ export class NbTableService<T> {
       );
   }
 
+  /**
+   * Sets the data source for the table. The data source can be an array, an observable or a signal.
+   * @param source The data source for the table. {@link NbTableDatasource}
+   * @throws Error if the data source is not an array, an observable or a signal.
+   */
   setSource(source: NbTableDatasource<T>): void {
     if (typeof source === 'object' && source.constructor === Array) this._dataSource.set(source);
     else if (typeof source === 'object' && source instanceof Observable) this.dataSource = toSignal(source, { injector: this._injector });
@@ -72,22 +85,42 @@ export class NbTableService<T> {
     else throw Error('Invalid value provided for NbTableDatasource.');
   }
 
+  /**
+   * Sets the columns for the table.
+   * @param columns The columns for the table.
+   */
   setColumns(columns: string[]): void {
     this._columns.set(columns);
   }
 
+  /**
+   * Sets the selected columns for the table. Based on these columns
+   * the spanned cells will be calculated.
+   * @param columns The selected columns for the table.
+   */
   setSelectedColumns(columns: string[]): void {
     this._selectedColumns.update(_ => columns);
   }
 
+  /**
+   * Sets the table rows.
+   * @param rows The table rows.
+   */
   setTableRows(rows: NbTableRowDirective[]): void {
     this._tableRows = rows;
   }
 
+  /**
+   * Returns the table rows.
+   * @returns The table rows.
+   */
   getTableRows(): NbTableRowDirective[] | undefined {
     return this._tableRows;
   }
 
+  /** 
+   * Registers a cell for rendering. This is used to determine if the table is stable or not.
+  */
   registerCell(cellId: string): void {
     if (this._cellRenderQueue.includes(cellId)) return;
 
@@ -95,6 +128,9 @@ export class NbTableService<T> {
     this._cellRenderQueueB$.next(this._cellRenderQueue);
   }
 
+  /** 
+   * Unregisters a cell for rendering. This is used to determine if the table is stable or not.
+  */
   unregisterCell(cellId: string): void {
     if (!this._cellRenderQueue.includes(cellId)) return;
 
@@ -105,14 +141,25 @@ export class NbTableService<T> {
     }
   }
 
+  /**
+   * Returns the hovered row index.
+   * @returns The hovered row index.
+   */
   get hoveredRow(): Signal<number | undefined> {
     return this._hoveredRow;
   }
 
+  /**
+   * Updates the hovered row index.
+   */
   updateHoveredRow(index: number | undefined): void {
     this._hoveredRow.set(index);
   }
 
+  /**
+   * Updates the selected column sorts of the table.
+   * @param sort The selected column sort.
+   */
   setColumnSort(sort: NbSort): void {
     this._tableSorts.update((activeSorts) => {
       let sorts = [...activeSorts];
@@ -124,6 +171,10 @@ export class NbTableService<T> {
     });
   }
 
+  /**
+   * Removes the selected column sort from the table.
+   * @param column The column to remove the sort from.
+   */
   removeColumnSort(column: string): void {
     this._tableSorts.update((activeSorts) => {
       let sorts = [...activeSorts];
@@ -134,6 +185,10 @@ export class NbTableService<T> {
     });
   }
 
+  /**
+   * Updates the column width of the table.
+   * @param columnWidth The column width to update.
+   */
   setColumnWidth(columnWidth: NbColumnWidth): void {
     this._columnWidths.update((columnWidths) => {
       let widths = [...columnWidths];
@@ -145,6 +200,10 @@ export class NbTableService<T> {
     });
   }
 
+  /**
+   * Returns the column widths of the table.
+   * @returns The column widths of the table.
+   */
   getColumnWidths(): Signal<NbColumnWidth[]> {
     return this._columnWidths;
   }
@@ -153,6 +212,11 @@ export class NbTableService<T> {
     this.tableState = computed(() => this._mapToTableStateAlpha(this.dataSource(), this._selectedColumns()));
   }
 
+  /**
+   * Observes the column widths and updates the column template.
+   * When a column width is set, the column template is updated.
+   * This template is a string property to be used with the grid-template-columns css property.
+   */
   private _observeColumnWidths(): void {
     this.columnTemplate = computed(() => {
       const selectedColumns = this._selectedColumns();
@@ -198,6 +262,13 @@ export class NbTableService<T> {
   //   return { hiddenCells, selectedColumns: columns, spans };
   // }
 
+  /**
+   * Finds the spanned and hidden cells for each table column.
+   * Reduces the column values, compares each value with the next one and if they are equal, it adds the next cell to the hidden cells array.
+   * @param columnValues The values of each cell in the column.
+   * @param column The column name.
+   * @returns The spans {@link SpannedCell} and hidden cells for the column.
+   */
   private _findSpans(columnValues: T[keyof T][], column: string): { spans: { [key: string]: SpannedCell; }, hiddenCells: string[]; } {
     let hiddenCells = <string[]>[];
     const spans = columnValues.reduce((spans, columnValue, index, values) => {
@@ -217,12 +288,18 @@ export class NbTableService<T> {
     return { spans, hiddenCells };
   }
 
+  /**
+   * Maps the data source to a table state. The table state contains the hidden cells, selected columns and spans.
+   * Reduces the columns based on the selected columns and finds the spanned and hidden cells for each of them.
+   * @param source The data source of the table.
+   * @param columns The table columns.
+   * @returns The table state {@link TableState}.
+   */
   private _mapToTableStateAlpha(source: readonly T[] | undefined, columns: string[]): TableState {
     const spans = new Map<string, SpannedCell>();
     let hiddenCells = <string[]>[];
 
     if (!source) return { hiddenCells, selectedColumns: [], spans };
-
 
     const colSpans = columns.reduce((spans, column) => {
       const columnValues = source.map((row) => row[findKey(<T extends Object ? T : any>row, column) as keyof T]);

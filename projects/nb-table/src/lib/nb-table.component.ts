@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Neoburst All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file in the root of the source tree.
+ */
+
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -45,10 +53,20 @@ interface DragHeaderEvent {
   providers: [NbTableService]
 })
 export class NbTableComponent<T> implements OnInit, OnDestroy {
+  /**
+   * The data source for the table. {@link NbTableDatasource}
+   * Accepts an array of objects, Observable or Signal of an array of objects.
+   * @param source The data source for the table.
+  */
   @Input() set dataSource(source: NbTableDatasource<T>) {
     this._tableService.setSource(source);
   }
 
+  /**
+   * The selected columns to be displayed at the top of the table.
+   * Based on these columns, the spanned cells will be calculated.
+   * @param columns The columns to be displayed at the top of the table.
+  */
   @Input() set activeColumns(columns: string[]) {
     this.selectedHeaders = columns;
   }
@@ -71,7 +89,14 @@ export class NbTableComponent<T> implements OnInit, OnDestroy {
     this._tableService.setTableRows(_rows.toArray());
   }
 
+  /**
+   * The selected columns that have to been dragged to the top of the table.
+   */
   @Output() selectedColumns = new EventEmitter<Array<string>>();
+
+  /**
+   * The columns that have been sorted.
+   */
   @Output() sortedColumns = new EventEmitter<Array<NbSort>>();
 
   private _directiveContainer!: DirectiveContainer;
@@ -88,6 +113,7 @@ export class NbTableComponent<T> implements OnInit, OnDestroy {
 
   dataSourceSig: Signal<readonly T[] | undefined>;
   dataSourceLength: Signal<number> = computed(() => this.dataSourceSig()?.length ?? 0);
+  // TODO - Remove and use the table service instead
   selectedHeaders: string[] = [];
 
   private _draggedHeader: DragHeader | undefined;

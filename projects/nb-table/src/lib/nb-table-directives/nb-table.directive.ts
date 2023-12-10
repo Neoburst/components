@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Neoburst All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file in the root of the source tree.
+ */
+
 import {
   AfterViewChecked,
   Directive,
@@ -31,12 +39,13 @@ export class NbTableDirective implements INbTableDirective {
   ],
 })
 export class NbColumnHeaderDirective implements INbTableDirective {
+  /**
+   * The column header to display.
+   */
   @Input({ alias: 'nbColumnHeader', required: true }) column!: string;
 
   constructor (
     public template: TemplateRef<any>,
-    private _element: ElementRef<HTMLElement>,
-    private _viewContainer: ViewContainerRef,
   ) { }
 }
 
@@ -47,12 +56,13 @@ export class NbColumnHeaderDirective implements INbTableDirective {
   ],
 })
 export class NbColumnCellDirective implements INbTableDirective {
+  /**
+   * The reference to the column cell.
+   */
   @Input({ alias: 'nbColumnCell', required: true }) column!: string;
 
   constructor (
     public template: TemplateRef<{ dataItem: any; row: number; }>,
-    private _element: ElementRef,
-    private _viewContainer: ViewContainerRef,
   ) { }
 }
 
@@ -63,8 +73,6 @@ export class NbColumnCellDirective implements INbTableDirective {
 export class NbHeaderRowDirective implements INbTableDirective {
   constructor (
     public template: TemplateRef<any>,
-    private _element: ElementRef,
-    private _viewContainer: ViewContainerRef,
   ) { }
 }
 
@@ -75,10 +83,13 @@ export class NbHeaderRowDirective implements INbTableDirective {
 export class NbRowDirective implements INbTableDirective {
   constructor (
     public template: TemplateRef<any>,
-    private _element: ElementRef,
     private _viewContainer: ViewContainerRef,
   ) { }
 
+  /**
+   * Determines whether the row is expandable.
+   * @returns Whether the row is expandable.
+   */
   isExpandable(): boolean {
     return (<any>this._viewContainer['_hostTNode' as keyof ViewContainerRef])?.attrs?.includes('nbExpandableRow') || false;
   }
@@ -88,12 +99,20 @@ export class NbRowDirective implements INbTableDirective {
   selector: '[nbTableRow]',
 })
 export class NbTableRowDirective {
+  /**
+   * Outputs the click event on the row.
+   * @returns The click event on the row, including the MouseEvent and data of the table row element.
+   */
   @Output() click = new EventEmitter<{ click: MouseEvent, data: Record<string, unknown>; }>();
 
   constructor (private _element: ElementRef) {
     this._element.nativeElement.classList.add('nb-table-row');
   }
 
+  /**
+   * Gets the row element.
+   * @returns The row element.
+   */
   getRowElement(): ElementRef {
     return this._element;
   }
@@ -103,12 +122,20 @@ export class NbTableRowDirective {
   selector: '[nbExpandableRow]',
 })
 export class NbExpandableRowDirective<C> {
+  /**
+   * Sets whether the row is expanded. Unless one ore more columns have been selected.
+   * @param expand Whether the row is expanded.
+   */
   @Input('nbExpandableRow') set expanded(expand: boolean) {
     if (this._tableService.tableState().selectedColumns?.length) return;
 
     this._element.nativeElement.classList.toggle('nb-expanded', expand);
   }
 
+  /**
+   * Outputs the click event on the row.
+   * @returns The click event on the row, including the MouseEvent and data of the table row element.
+   */
   @Output() click = new EventEmitter<{ click: MouseEvent, data: Record<string, unknown>; }>();
 
   constructor (private _element: ElementRef, private _tableService: NbTableService<any>) {
@@ -120,6 +147,10 @@ export class NbExpandableRowDirective<C> {
     });
   }
 
+  /**
+   * Gets the row element.
+   * @returns The row element.
+   */
   getRowElement(): ElementRef {
     return this._element;
   }
@@ -130,11 +161,36 @@ export class NbExpandableRowDirective<C> {
   providers: [],
 })
 export class NbHeaderCellDirective implements OnInit {
+  /**
+   * The column header to display.
+   */
   @Input({ alias: 'nbHeaderCell', required: true }) column!: string;
+
+  /**
+   * Whether the column is draggable.
+   * @default false
+   */
   @Input('nbHeaderCellDrag') drag: boolean = false;
+
+  /**
+   * Whether the column is resizable.
+   * @default false
+   */
   @Input('nbHeaderCellResize') resize: boolean = false;
+
+  /**
+   * The size of the column width.
+   */
   @Input('nbHeaderCellSize') size?: number;
+
+  /**
+   * The minimum width of the column.
+   */
   @Input('nbHeaderCellMin') min?: number;
+
+  /**
+   * The maximum width of the column.
+   */
   @Input('nbHeaderCellMax') max?: number;
 
   private get _headerElement(): HTMLElement {
@@ -165,6 +221,10 @@ export class NbHeaderCellDirective implements OnInit {
     }
   }
 
+  /**
+   * Handles the drag event and attaches the column name to the data of the event.
+   * @param event The drag event.
+   */
   private _draghandle = (event: DragEvent): void => {
     if (!event.dataTransfer) return;
 
@@ -172,6 +232,9 @@ export class NbHeaderCellDirective implements OnInit {
     event.dataTransfer.setData('text/plain', this.column);
   };
 
+  /**
+   * Appends the resizer element to the header cell.
+   */
   private _appendResizer(): void {
     const resizer = document.createElement('span');
     resizer.classList.add('nb-column-resize');
@@ -186,6 +249,11 @@ export class NbHeaderCellDirective implements OnInit {
     this._element.nativeElement.appendChild(resizer);
   }
 
+  /**
+   * Listens to the mouse move event and updates the column width.
+   * @param startX The start X position of the mouse.
+   * @param startWidth The start width of the column.
+   */
   private _listenMouseMove(startX: number, startWidth: number): void {
     const mouseMove = this.renderer.listen('document', 'mousemove', (event: MouseEvent) => {
       const movedX = event.pageX - startX;
@@ -206,7 +274,14 @@ export class NbHeaderCellDirective implements OnInit {
   providers: [],
 })
 export class NbCellDirective implements AfterViewChecked {
+  /**
+   * The reference to the column cell.
+   */
   @Input({ alias: 'nbCell', required: true }) column!: string;
+
+  /**
+   * The row index of the cell.
+   */
   @Input({ alias: 'nbCellRow', required: true }) set rowIndex(index: number) {
     if (index === null || index === undefined) return;
 
@@ -230,6 +305,21 @@ export class NbCellDirective implements AfterViewChecked {
     private _element: ElementRef,
     private _tableService: NbTableService<any>,
   ) {
+    this._determineSpan();
+    this._determineRowHover();
+    this._determineCellWidth();
+    this._setupEventListeners();
+  }
+
+  ngAfterViewChecked(): void {
+    const cellId = `${this.column}-${this._rowIndex}`;
+    this._tableService.unregisterCell(cellId);
+  }
+
+  /**
+   * Determines whether the cell is spanned or hidden and sets the appropriate class to the cell element.
+   */
+  private _determineSpan(): void {
     effect(() => {
       const tableState = this._tableService.tableState();
       const cellId = `${this.column}-${this._rowIndex}`;
@@ -253,13 +343,23 @@ export class NbCellDirective implements AfterViewChecked {
         this._cellElement.classList.add('nb-span-hidden');
       }
     });
+  }
 
+  /**
+   * Determines whether the row is hovered and sets the appropriate class to the cell element.
+   */
+  private _determineRowHover(): void {
     effect(() => {
       const hoveredRowIndex = this._tableService.hoveredRow();
       if (this._rowIndex == null) return;
       this._cellElement.classList.toggle(`nb-hovered-row`, hoveredRowIndex === this._rowIndex);
     });
+  }
 
+  /**
+   * Determines the width of the cell and sets the width the to style properties of the cell element.
+   */
+  private _determineCellWidth(): void {
     const columnWidths = this._tableService.getColumnWidths();
     effect(() => {
       const widths = columnWidths();
@@ -268,7 +368,12 @@ export class NbCellDirective implements AfterViewChecked {
       const width = widths.find(x => x.column === this.column);
       if (width) this._cellElement.style.minWidth = `${width.width}px`;
     });
+  }
 
+  /**
+   * Sets up the event listeners for the cell element.
+   */
+  private _setupEventListeners(): void {
     this._cellElement.addEventListener('click', (event: MouseEvent) => {
       const dataSource = this._tableService.dataSource();
       const row = this._tableService.getTableRows()?.[this._rowIndex];
@@ -283,10 +388,5 @@ export class NbCellDirective implements AfterViewChecked {
     (<HTMLElement>this._cellElement).addEventListener('mouseleave', () => {
       this._tableService.updateHoveredRow(undefined);
     });
-  }
-
-  ngAfterViewChecked(): void {
-    const cellId = `${this.column}-${this._rowIndex}`;
-    this._tableService.unregisterCell(cellId);
   }
 }
