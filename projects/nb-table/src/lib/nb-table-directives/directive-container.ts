@@ -8,7 +8,7 @@
 
 import { QueryList } from '@angular/core';
 import {
-  INbTableDirective,
+  NbTableDirective,
   NbColumnCellDirective,
   NbColumnHeaderDirective,
   NbHeaderRowDirective,
@@ -16,7 +16,7 @@ import {
 } from './nb-table.directive';
 
 export class DirectiveContainer {
-  constructor (private _directives: QueryList<INbTableDirective>) { }
+  constructor (private _directives: QueryList<NbTableDirective>) { }
 
   /**
    * Get the column header directives. {@link NbColumnHeaderDirective}
@@ -25,7 +25,7 @@ export class DirectiveContainer {
   getColumnHeaderDirectives(): NbColumnHeaderDirective[] {
     return <NbColumnHeaderDirective[]>(
       this._directives.filter(
-        (d: INbTableDirective) => d instanceof NbColumnHeaderDirective
+        (d: NbTableDirective) => d instanceof NbColumnHeaderDirective
       )
     );
   }
@@ -37,7 +37,7 @@ export class DirectiveContainer {
   getColumnCellDirectives(): NbColumnCellDirective[] {
     return <NbColumnCellDirective[]>(
       this._directives.filter(
-        (d: INbTableDirective) => d instanceof NbColumnCellDirective
+        (d: NbTableDirective) => d instanceof NbColumnCellDirective
       )
     );
   }
@@ -49,7 +49,7 @@ export class DirectiveContainer {
   getHeaderRowDirectives(): NbHeaderRowDirective[] {
     return <NbHeaderRowDirective[]>(
       this._directives.filter(
-        (d: INbTableDirective) => d instanceof NbHeaderRowDirective
+        (d: NbTableDirective) => d instanceof NbHeaderRowDirective
       )
     );
   }
@@ -61,7 +61,7 @@ export class DirectiveContainer {
   getRowDirectives(): NbRowDirective[] {
     return <NbRowDirective[]>(
       this._directives.filter(
-        (d: INbTableDirective) => d instanceof NbRowDirective && !d.isExpandable()
+        (d: NbTableDirective) => d instanceof NbRowDirective && !d.isExpandable()
       )
     );
   }
@@ -73,7 +73,7 @@ export class DirectiveContainer {
   getExpandableRowDirectives(): NbRowDirective[] {
     return <NbRowDirective[]>(
       this._directives.filter(
-        (d: INbTableDirective) => d instanceof NbRowDirective && d.isExpandable()
+        (d: NbTableDirective) => d instanceof NbRowDirective && d.isExpandable()
       )
     );
   }

@@ -8,13 +8,13 @@ import {
   NbHeaderCellDirective,
   NbHeaderRowDirective,
   NbRowDirective,
-  NbTableDirective,
+  NbTableDirectiveImpl,
   NbTableRowDirective,
 } from './nb-table.directive';
 
 @NgModule({
   declarations: [
-    NbTableDirective,
+    NbTableDirectiveImpl,
     NbColumnHeaderDirective,
     NbColumnCellDirective,
     NbHeaderRowDirective,
@@ -26,7 +26,7 @@ import {
   ],
   imports: [CommonModule],
   exports: [
-    NbTableDirective,
+    NbTableDirectiveImpl,
     NbColumnHeaderDirective,
     NbColumnCellDirective,
     NbHeaderRowDirective,

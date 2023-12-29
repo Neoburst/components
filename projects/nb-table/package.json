@@ -1,6 +1,6 @@
 {
   "name": "@neoburst/table",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "scripts": {
     "pack": "ng-packagr -p ng-package.json"
   },
