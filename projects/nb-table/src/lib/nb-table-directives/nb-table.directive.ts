@@ -21,24 +21,37 @@ import {
 } from '@angular/core';
 import { NbTableService } from '../nb-table.service';
 
-export interface INbTableDirective {
+/**
+ * List of CSS classes to be added to the table elements.
+ */
+const TABLE_HEADER_CLASS = 'nb-header-cell';
+const TABLE_CELL_CLASS = 'nb-table-cell';
+const COLUMN_RESIZE_CLASS = 'nb-column-resize';
+const TABLE_ROW_CLASS = 'nb-table-row';
+const EXPANDED_ROW_CLASS = 'nb-expanded';
+const EXPANDABLE_ROW_CLASS = 'nb-expandable-row';
+const HIDDEN_ROW_CLASS = 'nb-hidden';
+const ODD_ROW_CLASS = 'nb-row-odd';
+const EVEN_ROW_CLASS = 'nb-row-even';
+
+export interface NbTableDirective {
   template: TemplateRef<any>;
 }
 
 @Directive({
   selector: '[nbTable]',
 })
-export class NbTableDirective implements INbTableDirective {
+export class NbTableDirectiveImpl implements NbTableDirective {
   constructor (public template: TemplateRef<any>) { }
 }
 
 @Directive({
   selector: '[nbColumnHeader]',
   providers: [
-    { provide: NbTableDirective, useExisting: NbColumnHeaderDirective },
+    { provide: NbTableDirectiveImpl, useExisting: NbColumnHeaderDirective },
   ],
 })
-export class NbColumnHeaderDirective implements INbTableDirective {
+export class NbColumnHeaderDirective implements NbTableDirective {
   /**
    * The column header to display.
    */
@@ -52,10 +65,10 @@ export class NbColumnHeaderDirective implements INbTableDirective {
 @Directive({
   selector: '[nbColumnCell]',
   providers: [
-    { provide: NbTableDirective, useExisting: NbColumnCellDirective },
+    { provide: NbTableDirectiveImpl, useExisting: NbColumnCellDirective },
   ],
 })
-export class NbColumnCellDirective implements INbTableDirective {
+export class NbColumnCellDirective implements NbTableDirective {
   /**
    * The reference to the column cell.
    */
@@ -68,9 +81,9 @@ export class NbColumnCellDirective implements INbTableDirective {
 
 @Directive({
   selector: '[nbHeaderRow]',
-  providers: [{ provide: NbTableDirective, useExisting: NbHeaderRowDirective }],
+  providers: [{ provide: NbTableDirectiveImpl, useExisting: NbHeaderRowDirective }],
 })
-export class NbHeaderRowDirective implements INbTableDirective {
+export class NbHeaderRowDirective implements NbTableDirective {
   constructor (
     public template: TemplateRef<any>,
   ) { }
@@ -78,9 +91,9 @@ export class NbHeaderRowDirective implements INbTableDirective {
 
 @Directive({
   selector: '[nbRow]',
-  providers: [{ provide: NbTableDirective, useExisting: NbRowDirective }],
+  providers: [{ provide: NbTableDirectiveImpl, useExisting: NbRowDirective }],
 })
-export class NbRowDirective implements INbTableDirective {
+export class NbRowDirective implements NbTableDirective {
   constructor (
     public template: TemplateRef<any>,
     private _viewContainer: ViewContainerRef,
@@ -106,7 +119,7 @@ export class NbTableRowDirective {
   @Output() click = new EventEmitter<{ click: MouseEvent, data: Record<string, unknown>; }>();
 
   constructor (private _element: ElementRef) {
-    this._element.nativeElement.classList.add('nb-table-row');
+    this._element.nativeElement.classList.add(TABLE_ROW_CLASS);
   }
 
   /**
@@ -129,7 +142,7 @@ export class NbExpandableRowDirective<C> {
   @Input('nbExpandableRow') set expanded(expand: boolean) {
     if (this._tableService.tableState().selectedColumns?.length) return;
 
-    this._element.nativeElement.classList.toggle('nb-expanded', expand);
+    this._element.nativeElement.classList.toggle(EXPANDED_ROW_CLASS, expand);
   }
 
   /**
@@ -139,11 +152,11 @@ export class NbExpandableRowDirective<C> {
   @Output() click = new EventEmitter<{ click: MouseEvent, data: Record<string, unknown>; }>();
 
   constructor (private _element: ElementRef, private _tableService: NbTableService<any>) {
-    this._element.nativeElement.classList.add('nb-expandable-row');
+    this._element.nativeElement.classList.add(EXPANDABLE_ROW_CLASS);
 
     effect(() => {
       const tableState = this._tableService.tableState();
-      this._element.nativeElement.classList.toggle('nb-hidden', !!tableState.selectedColumns.length);
+      this._element.nativeElement.classList.toggle(HIDDEN_ROW_CLASS, !!tableState.selectedColumns.length);
     });
   }
 
@@ -210,7 +223,7 @@ export class NbHeaderCellDirective implements OnInit {
   }
 
   ngOnInit(): void {
-    this._headerElement.classList.add('nb-header-cell');
+    this._headerElement.classList.add(TABLE_HEADER_CLASS);
     this._headerElement.draggable = this.drag;
     if (this.drag) this._headerElement.addEventListener('dragstart', this._draghandle);
 
@@ -237,7 +250,7 @@ export class NbHeaderCellDirective implements OnInit {
    */
   private _appendResizer(): void {
     const resizer = document.createElement('span');
-    resizer.classList.add('nb-column-resize');
+    resizer.classList.add(COLUMN_RESIZE_CLASS);
     resizer.addEventListener('mousedown', (event) => {
       const startX = event.pageX;
       const startWidth = (<HTMLElement>event.target)?.parentElement?.clientWidth;
@@ -286,10 +299,10 @@ export class NbCellDirective implements AfterViewChecked {
     if (index === null || index === undefined) return;
 
     this._rowIndex = index;
-    this._cellElement.classList.add('nb-table-cell');
+    this._cellElement.classList.add(TABLE_CELL_CLASS);
 
-    this._cellElement.classList.toggle('nb-row-odd', (index + 1) % 2 !== 0);
-    this._cellElement.classList.toggle('nb-row-even', (index + 1) % 2 === 0);
+    this._cellElement.classList.toggle(ODD_ROW_CLASS, (index + 1) % 2 !== 0);
+    this._cellElement.classList.toggle(EVEN_ROW_CLASS, (index + 1) % 2 === 0);
 
     const cellId = `${this.column}-${this._rowIndex}`;
     this._tableService.registerCell(cellId);

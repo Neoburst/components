@@ -24,12 +24,12 @@ import {
 import { filter, map, Subject, switchMap, takeUntil, timer } from 'rxjs';
 import { DirectiveContainer } from './nb-table-directives/directive-container';
 import {
-  INbTableDirective,
+  NbTableDirective,
   NbColumnCellDirective,
   NbColumnHeaderDirective,
   NbHeaderRowDirective,
   NbRowDirective,
-  NbTableDirective,
+  NbTableDirectiveImpl,
   NbTableRowDirective,
 } from './nb-table-directives/nb-table.directive';
 import { NbTableDatasource, NbTableService } from './nb-table.service';
@@ -71,7 +71,7 @@ export class NbTableComponent<T> implements OnInit, OnDestroy {
     this.selectedHeaders = columns;
   }
 
-  @ContentChildren(NbTableDirective) set cells(_cells: QueryList<INbTableDirective>) {
+  @ContentChildren(NbTableDirectiveImpl) set cells(_cells: QueryList<NbTableDirective>) {
     this._directiveContainer = new DirectiveContainer(_cells);
     this.headerRows = this._directiveContainer.getHeaderRowDirectives();
     this._originalColumnHeaders = this._directiveContainer.getColumnHeaderDirectives();
