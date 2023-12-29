@@ -22,14 +22,14 @@ export function nbSortBy<T extends Object, K extends keyof T>(sorts: NbSort[]): 
 
 /**
  * Sorts two objects by the given property.
- * @param o1 The first object to compare.
- * @param o2 The second object to compare.
+ * @param a The first object to compare.
+ * @param b The second object to compare.
  * @param prop The property to compare.
  * @param ascending Whether to sort ascending or descending.
  * @returns The result of the comparison.
  */
-function _sortCompare<T, K extends keyof T>(o1: T, o2: T, prop: K | undefined, ascending: boolean): number {
+function _sortCompare<T, K extends keyof T>(a: T, b: T, prop: K | undefined, ascending: boolean): number {
   if (prop == null) return 0;
-  if (typeof o1[prop] === 'string') return (<string>o1[prop]).localeCompare(<string>o2[prop]) * (ascending ? 1 : -1);
-  return ((<any>o1[prop]) == (<any>o2[prop]) ? 0 : (<any>o1[prop]) < (<any>o2[prop]) ? -1 : 1) * (ascending ? 1 : -1);
+  if (typeof a[prop] === 'string') return (<string>a[prop]).localeCompare(<string>b[prop]) * (ascending ? 1 : -1);
+  return (a[prop] == b[prop] ? 0 : a[prop] < b[prop] ? -1 : 1) * (ascending ? 1 : -1);
 }
