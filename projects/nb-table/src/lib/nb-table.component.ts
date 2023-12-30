@@ -62,6 +62,10 @@ export class NbTableComponent<T> implements OnInit, OnDestroy {
     this._tableService.setSource(source);
   }
 
+  get dataSource(): Signal<readonly T[] | undefined> {
+    return this._tableService.dataSource;
+  }
+
   /**
    * The selected columns to be displayed at the top of the table.
    * Based on these columns, the spanned cells will be calculated.
@@ -111,8 +115,7 @@ export class NbTableComponent<T> implements OnInit, OnDestroy {
   private _originalColumnHeaders!: NbColumnHeaderDirective[];
   private _originalTableCells!: NbColumnCellDirective[];
 
-  dataSourceSig: Signal<readonly T[] | undefined>;
-  dataSourceLength: Signal<number> = computed(() => this.dataSourceSig()?.length ?? 0);
+  dataSourceLength: Signal<number> = computed(() => this.dataSource()?.length ?? 0);
   // TODO - Remove and use the table service instead
   selectedHeaders: string[] = [];
 
@@ -122,15 +125,20 @@ export class NbTableComponent<T> implements OnInit, OnDestroy {
   private _unsubscriber = new Subject<void>();
 
   constructor (private _cd: ChangeDetectorRef, private _tableService: NbTableService<T>) {
-    this.dataSourceSig = this._tableService.dataSource;
     this._tableService.stable$.pipe(takeUntil(this._unsubscriber)).subscribe((stable) => {
       if (stable) this._rearrangeColumns();
     });
 
+    // TODO - move effects to private functions
     effect(() => {
       const css = window.document.styleSheets[0];
       const dataLength = this.dataSourceLength();
 
+      /** 
+       * dynamically create the css grid rules for the table
+       * based on the number of rows in the data source
+       * since we cannot guess the length of the provided data source
+       */
       for (let i = 1; i <= dataLength; i++) {
         css.insertRule(`
             .nb-span-${i} {
@@ -171,7 +179,11 @@ export class NbTableComponent<T> implements OnInit, OnDestroy {
   }
 
   rearrangeHeaders(event: DragEvent, index: number): void {
-    if ((event.dataTransfer && event.dataTransfer.effectAllowed !== 'move') || !this._draggedHeader || this.selectedHeaders[index] === this._draggedHeader.label) return;
+    if (
+      (event.dataTransfer && event.dataTransfer.effectAllowed !== 'move')
+      || !this._draggedHeader
+      || this.selectedHeaders[index] === this._draggedHeader.label
+    ) return;
 
     this._dragHeaderQueue.next({ dragHeader: this._draggedHeader, newIndex: index });
   }
