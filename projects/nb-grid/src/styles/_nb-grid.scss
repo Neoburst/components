@@ -1,0 +1,70 @@
+body {
+  --nb-grid-resize-color: rgba(0, 0, 0, 0.4);
+}
+
+.nb-grid.active-resizers {
+  .nb-grid-item-resizer {
+    display: block;
+  }
+}
+
+.nb-grid-item-resizer {
+  display: none;
+  position: absolute;
+
+  &-left,
+  &-right {
+    background-image: linear-gradient(
+      to bottom,
+      transparent,
+      transparent 33%,
+      var(--nb-grid-resize-color) 33%,
+      var(--nb-grid-resize-color) 67%,
+      transparent 67%
+    );
+    cursor: col-resize;
+    height: 100%;
+    margin: 0 5px 0 0;
+    width: 3px;
+  }
+
+  &-top,
+  &-bottom {
+    background-image: linear-gradient(
+      to right,
+      transparent,
+      transparent 33%,
+      var(--nb-grid-resize-color) 33%,
+      var(--nb-grid-resize-color) 67%,
+      transparent 67%
+    );
+    cursor: row-resize;
+    height: 3px;
+    margin: 0 0 5px 0;
+    width: 100%;
+  }
+
+  &-left {
+    left: 0;
+    top: 0;
+  }
+
+  &-right {
+    right: 0;
+    top: 0;
+  }
+
+  &-top {
+    left: 0;
+    top: 0;
+  }
+
+  &-bottom {
+    bottom: 0;
+    left: 0;
+  }
+}
+
+.nb-grid-item-dragged {
+  opacity: 0.5;
+}

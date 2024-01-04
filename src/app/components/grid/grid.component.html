@@ -1,0 +1,10 @@
+<nb-grid [displayResizers]="true">
+  @for (tile of tiles; track tile.text) {
+  <div class="tile"
+       [style.--background]="tile.color"
+       [nbGridItem]="tile.gridItem">
+    {{ tile.text }}
+  </div>
+  }
+  <app-grid-tile [nbGridItem] />
+</nb-grid>
