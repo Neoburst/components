@@ -1,0 +1,37 @@
+{
+  "name": "@neoburst/grid-display",
+  "version": "0.1.0",
+  "scripts": {
+    "pack": "ng-packagr -p ng-package.json"
+  },
+  "keywords": [
+    "angular",
+    "angular 2",
+    "angular grid",
+    "data grid",
+    "neoburst",
+    "reactive grid",
+    "grid",
+    "grid display"
+  ],
+  "peerDependencies": {
+    "@angular/common": "^17.0.2",
+    "@angular/core": "^17.0.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "exports": {
+    ".": {
+      "sass": "./src/styles/_nb-grid.scss"
+    }
+  },
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Neoburst/components/tree/main/projects/nb-grid"
+  }
+}

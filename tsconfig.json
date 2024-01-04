@@ -13,6 +13,9 @@
       "nb-form-field": [
         "dist/nb-form-field"
       ],
+      "nb-grid": [
+        "./dist/nb-grid"
+      ],
       "nb-input": [
         "dist/nb-input"
       ],

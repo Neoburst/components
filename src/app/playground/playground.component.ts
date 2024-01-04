@@ -13,6 +13,7 @@ interface NbComponent {
 })
 export class PlaygroundComponent implements OnInit {
   components: NbComponent[] = [
+    { name: 'Grid', route: 'grid' },
     { name: 'Input', route: 'input' },
     { name: 'Table', route: 'table' }
   ];

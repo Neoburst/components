@@ -1,0 +1,11 @@
+:host {
+  margin: 1rem 1rem 0 0;
+  width: 100%;
+}
+
+.tile {
+  background-color: var(--background);
+  border-radius: 10px;
+  box-sizing: border-box;
+  padding: 1rem;
+}
