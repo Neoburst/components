@@ -3,11 +3,11 @@ import { ComponentFixture, TestBed, fakeAsync, flush, tick } from '@angular/core
 import { NbTableComponent } from './nb-table.component';
 import { NbTableService } from './nb-table.service';
 import { ElementRef, QueryList, TemplateRef, ViewContainerRef, signal } from '@angular/core';
-import { INbTableDirective, NbColumnHeaderDirective } from './nb-table-directives/nb-table.directive';
+import { NbTableDirective as NbTableDirective, NbColumnHeaderDirective } from './nb-table-directives/nb-table.directive';
 import { of } from 'rxjs';
 
 function getHeaderDirective(column: string): NbColumnHeaderDirective {
-  const dir = new NbColumnHeaderDirective(<TemplateRef<any>>{}, <ElementRef>{}, <ViewContainerRef>{});
+  const dir = new NbColumnHeaderDirective(<TemplateRef<any>>{});
   dir.column = column;
 
   return dir;
@@ -51,7 +51,7 @@ describe('NbTableComponent', () => {
   describe('selected headers', () => {
     beforeEach(() => {
       // arrange
-      const queryList = new QueryList<INbTableDirective>();
+      const queryList = new QueryList<NbTableDirective>();
       queryList.reset([
         getHeaderDirective('FirstName'),
         getHeaderDirective('LastName'),

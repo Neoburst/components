@@ -17,7 +17,7 @@ interface Tile {
   styleUrl: './grid.component.scss'
 })
 export class GridComponent {
-  gridItem = { cols: 1, rows: 1 };
+  gridItem = { cols: 2, rows: 1 };
 
   tiles: Tile[] = [
     { text: 'One', color: 'lightblue' },
@@ -52,6 +52,10 @@ export class GridComponent {
     { text: 'Thirty', color: 'lightgreen' },
     { text: 'Thirty-one', color: 'lightpink' },
   ].map((tile) => this._addGridItem(tile));
+
+  handleChange(gridItems: NbGridItem[]): void {
+    console.log('gridItems', gridItems);
+  }
 
   private _addGridItem(tile: Partial<Tile>): Tile {
     const gridItem: NbGridItem = {

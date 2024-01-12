@@ -7,7 +7,7 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "nb-test": "ng test --project=nb-table"
+    "nb-test": "ng test --project=nb-table & ng test --project=nb-grid"
   },
   "private": true,
   "dependencies": {

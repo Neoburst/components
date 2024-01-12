@@ -1,4 +1,4 @@
-body {
+html {
   --nb-grid-resize-color: rgba(0, 0, 0, 0.4);
 }
 
@@ -12,7 +12,6 @@ body {
   display: none;
   position: absolute;
 
-  &-left,
   &-right {
     background-image: linear-gradient(
       to bottom,
@@ -25,10 +24,11 @@ body {
     cursor: col-resize;
     height: 100%;
     margin: 0 5px 0 0;
+    right: 0;
+    top: 0;
     width: 3px;
   }
 
-  &-top,
   &-bottom {
     background-image: linear-gradient(
       to right,
@@ -38,30 +38,12 @@ body {
       var(--nb-grid-resize-color) 67%,
       transparent 67%
     );
+    bottom: 0;
     cursor: row-resize;
     height: 3px;
+    left: 0;
     margin: 0 0 5px 0;
     width: 100%;
-  }
-
-  &-left {
-    left: 0;
-    top: 0;
-  }
-
-  &-right {
-    right: 0;
-    top: 0;
-  }
-
-  &-top {
-    left: 0;
-    top: 0;
-  }
-
-  &-bottom {
-    bottom: 0;
-    left: 0;
   }
 }
 

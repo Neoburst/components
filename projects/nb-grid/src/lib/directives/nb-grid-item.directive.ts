@@ -1,4 +1,5 @@
-import { Directive, ElementRef, Input, Renderer2, signal } from '@angular/core';
+import { Directive, ElementRef, Input, OnInit, Renderer2, signal } from '@angular/core';
+import { NbGridService } from '../nb-grid.service';
 
 export interface NbGridItem {
   cols: number;
@@ -12,25 +13,35 @@ const RESIZER_CLASSES = ['right', 'bottom'];
   selector: '[nbGridItem]',
   standalone: true
 })
-export class NbGridItemDirective {
+export class NbGridItemDirective implements OnInit {
   @Input('nbGridItem') set gridItem(gridItem: NbGridItem | undefined) {
     if (!gridItem) return;
-    this._cols.set(gridItem.cols);
-    this._rows.set(gridItem.rows);
+
+    this._gridItem.set(gridItem);
     this.gridElement.style.gridColumnStart = `span ${gridItem.cols}`;
     this.gridElement.style.gridRowStart = `span ${gridItem.rows}`;
+
+    this._itemId = this._nbGridService.registerItem(this.gridElement, gridItem);
   };
 
-  private _cols = signal(1);
-  private _rows = signal(1);
+  @Input('nbGridItemDrag') set draggable(draggable: boolean) {
+    this.gridElement.draggable = draggable;
+  }
+
+  private _itemId: string | undefined;
+  private _gridItem = signal<NbGridItem>({ cols: 1, rows: 1 });
 
   get gridElement(): HTMLElement {
     return this._element.nativeElement;
   }
 
-  constructor (private _element: ElementRef, private _renderer: Renderer2) {
-    this._element.nativeElement.classList.add('nb-grid-item');
+  constructor (private _element: ElementRef<HTMLElement>, private _nbGridService: NbGridService, private _renderer: Renderer2) {
+    this.gridElement.classList.add('nb-grid-item');
     RESIZER_CLASSES.forEach((resizerClass) => this._addResizer(resizerClass));
+  }
+
+  ngOnInit(): void {
+    if (!this._itemId) this._itemId = this._nbGridService.registerItem(this.gridElement, this._gridItem());
   }
 
   private _addResizer(resizerClass: string): void {
@@ -43,7 +54,7 @@ export class NbGridItemDirective {
       const startWidth = (<HTMLElement>event.target).parentElement?.clientWidth || this.gridElement.clientWidth;
       const startHeight = (<HTMLElement>event.target).parentElement?.clientHeight || this.gridElement.clientHeight;
 
-      resizerClass === 'right' ? this._addHorizontalMouseListener(startX, startWidth, this._cols()) : this._addVerticalMouseListener(startY, startHeight, this._rows());
+      resizerClass === 'right' ? this._addHorizontalMouseListener(startX, startWidth, this._gridItem().cols) : this._addVerticalMouseListener(startY, startHeight, this._gridItem().rows);
     });
 
     this.gridElement.appendChild(resizer);
@@ -52,26 +63,31 @@ export class NbGridItemDirective {
   private _addHorizontalMouseListener(startX: number, startWidth: number, startCols: number): void {
     const mouseMove = this._renderer.listen('document', 'mousemove', (e: MouseEvent) => {
       const newSpan = Math.round((startCols / startWidth) * (e.pageX - startX + startWidth));
-      this._cols.set(newSpan);
+
+      this._gridItem.update((gridItem) => ({ ...gridItem, cols: newSpan }));
       this.gridElement.style.gridColumnStart = `span ${newSpan}`;
     });
 
-    const mouseUp = this._renderer.listen('document', 'mouseup', () => {
-      mouseMove();
-      mouseUp();
-    });
+    this._setMouseUpListener(mouseMove);
   }
 
   private _addVerticalMouseListener(startY: number, startHeight: number, startRows: number): void {
     const mouseMove = this._renderer.listen('document', 'mousemove', (e: MouseEvent) => {
       const newSpan = Math.round((startRows / startHeight) * (e.pageY - startY + startHeight));
-      this._rows.set(newSpan);
+
+      this._gridItem.update((gridItem) => ({ ...gridItem, rows: newSpan }));
       this.gridElement.style.gridRowStart = `span ${newSpan}`;
     });
 
+    this._setMouseUpListener(mouseMove);
+  }
+
+  private _setMouseUpListener(mouseMove: () => void): void {
     const mouseUp = this._renderer.listen('document', 'mouseup', () => {
       mouseMove();
       mouseUp();
+
+      if (this._itemId) this._nbGridService.updateItem(this._itemId, this._gridItem());
     });
   }
 }

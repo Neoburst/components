@@ -9,7 +9,6 @@
       "cwd": "${workspaceFolder}",
       "args": ["test", "${input:projectName}", "--test-path-pattern=${fileBasenameNoExtension}", "--run-in-band"],
       "console": "integratedTerminal",
-      "disableOptimisticBPs": true
     }
   ],
   "inputs": [
@@ -17,7 +16,7 @@
       "id": "projectName",
       "description": "project to test",
       "type": "pickString",
-      "options": ["nb-table"],
+      "options": ["nb-table", "nb-grid"],
       "default": "nb-table"
     }
   ]
