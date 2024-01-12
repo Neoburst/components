@@ -2,8 +2,8 @@ import { ComponentFixture, TestBed, fakeAsync, flush, tick } from '@angular/core
 
 import { NbTableComponent } from './nb-table.component';
 import { NbTableService } from './nb-table.service';
-import { ElementRef, QueryList, TemplateRef, ViewContainerRef, signal } from '@angular/core';
-import { NbTableDirective as NbTableDirective, NbColumnHeaderDirective } from './nb-table-directives/nb-table.directive';
+import { QueryList, TemplateRef, signal } from '@angular/core';
+import { NbTableDirective, NbColumnHeaderDirective } from './nb-table-directives/nb-table.directive';
 import { of } from 'rxjs';
 
 function getHeaderDirective(column: string): NbColumnHeaderDirective {
