@@ -3,11 +3,12 @@
 }
 
 nb-table {
-  --nb-column-header-color: #da4167;
-  --nb-column-header-text-color: #fff;
-  --nb-column-header-resize-color: #e68fa5;
+  --nb-column-header-color: var(--neo-magenta);
+  --nb-column-header-text-color: var(--neo-off-white);
+  --nb-column-header-resize-color: var(--neo-off-white);
   --nb-row-color: #22252c;
-  --nb-row-border-color: #ffffff33;
+  --nb-altrow-color: var(--neo-dark-blue-alt);
+  --nb-row-border-color: rgba(var(--neo-off-white-rgb), 0.12);
   --nb-row-hover-color: #da416777;
   --nb-expanding-row-color: #171a21;
   --nb-selected-header-color: #22252c;

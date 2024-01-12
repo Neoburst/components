@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, ContentChildren, ElementRef, EventEmitter, Input, Output, QueryList, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ContentChildren, ElementRef, EventEmitter, Input, Output, QueryList, effect, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NbGridItem, NbGridItemDirective } from './directives/nb-grid-item.directive';
+import { NbGridService } from './nb-grid.service';
 
 @Component({
   selector: 'nb-grid',
@@ -10,51 +11,76 @@ import { NbGridItem, NbGridItemDirective } from './directives/nb-grid-item.direc
     `
       :host {
         display: grid;
-        gap: 1rem;
+        gap: var(--gap, 1rem);
         grid-auto-flow: row dense;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        grid-template-columns: repeat(var(--cols, auto-fill), minmax(var(--min-item-width, 200px), 1fr));
         transition: 300ms;
       }
     `
   ],
   imports: [CommonModule],
+  providers: [NbGridService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NbGridComponent {
   @ContentChildren(NbGridItemDirective) set gridElements(dirs: QueryList<NbGridItemDirective>) {
-    dirs.changes.subscribe((changes) => console.log(changes));
-    this._gridItems.set(dirs.map((gridElement) => gridElement.gridItem).filter((gridItem): gridItem is NbGridItem => !!gridItem));
-
     dirs.forEach((dir) => this._configureDrag(dir));
   }
 
-  @Input() columns?: number;
-  @Input() gap?: number;
+  @Input() set columns(cols: number) {
+    this._element.nativeElement.style.setProperty('--cols', String(cols));
+  }
+
+  @Input() set gap(gap: number) {
+    this._element.nativeElement.style.setProperty('--gap', `${gap}px`);
+  }
+
+  @Input() set minItemWidth(minItemWidth: number) {
+    this._element.nativeElement.style.setProperty('--min-item-width', `${minItemWidth}px`);
+  }
+
   @Input() set displayResizers(displayResizers: boolean) {
     this._element.nativeElement.classList.toggle('active-resizers', displayResizers);
   }
 
-  private _draggedElement = signal<HTMLElement | undefined>(undefined);
-
   @Output() valueChange = new EventEmitter<NbGridItem[]>();
 
-  private _gridItems = signal<NbGridItem[]>([]);
+  private _draggedElement = signal<HTMLElement | undefined>(undefined);
 
-  constructor (private _element: ElementRef<HTMLElement>) {
+  constructor (private _element: ElementRef<HTMLElement>, private _nbGridService: NbGridService) {
     this._element.nativeElement.classList.add('nb-grid');
+
+    effect(() => {
+      const gridItemState = this._nbGridService.gridItemState();
+      const gridItems = Array.from(this._element.nativeElement.children)
+        .filter((el): el is HTMLElement => el instanceof HTMLElement)
+        .map((el) => el.attributes.getNamedItem('nb-grid-item')?.value)
+        .map((id) => id ? gridItemState[id] : undefined)
+        .filter((item): item is NbGridItem => !!item);
+      this.valueChange.emit(gridItems);
+    });
   }
 
   private _configureDrag(dir: NbGridItemDirective): void {
     const element = dir.gridElement;
-    element.draggable = true;
 
-    element.ondragover = (e) => {
+    element.ondragover = this._getDragOverEvent();
+    element.ondragend = this._getDragEndEvent(element);
+    element.ondragstart = this._getDragStartEvent(element);
+  }
+
+  private _getDragOverEvent(): (e: DragEvent) => void {
+    return (e) => {
       e.preventDefault();
       if (e.dataTransfer) e.dataTransfer.dropEffect = 'move';
 
       const dragEl = this._draggedElement();
       const target = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement;
-      if (!dragEl || !target.classList.contains('nb-grid-item')) return;
+      if (
+        !dragEl ||
+        !target.classList.contains('nb-grid-item') ||
+        !dragEl.attributes.getNamedItem('draggable')?.value
+      ) return;
 
       if (target && target !== dragEl) {
         const targetPosition = target.getBoundingClientRect();
@@ -65,21 +91,35 @@ export class NbGridComponent {
         this._element.nativeElement.insertBefore(dragEl, next && target.nextSibling || target);
       }
     };
+  }
 
-    element.ondragend = (e) => {
+  private _getDragEndEvent(element: HTMLElement): (e: DragEvent) => void {
+    return (e) => {
       e.preventDefault();
-
       element.classList.remove('nb-grid-item-dragged');
-    };
 
-    element.ondragstart = (e) => {
+      const gridItems = this._getGridItems();
+      this.valueChange.emit(gridItems);
+    };
+  }
+
+  private _getDragStartEvent(element: HTMLElement): (e: DragEvent) => void {
+    return (e) => {
       if (e.dataTransfer) {
         e.dataTransfer.effectAllowed = 'move';
         e.dataTransfer.setData('text/html', element.textContent || element.innerText);
 
-        element.classList.add('nb-grid-item-dragged');
+        if (element.attributes.getNamedItem('draggable')?.value) element.classList.add('nb-grid-item-dragged');
         this._draggedElement.set(element);
       }
     };
+  }
+
+  private _getGridItems(): NbGridItem[] {
+    return Array.from(this._element.nativeElement.children)
+      .filter((el): el is HTMLElement => el instanceof HTMLElement)
+      .map((el: HTMLElement) => el.attributes.getNamedItem('nb-grid-item')?.value)
+      .map((id) => this._nbGridService.getItem(id))
+      .filter((item): item is NbGridItem => !!item);
   }
 }

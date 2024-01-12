@@ -1,6 +1,6 @@
 :host {
-  background-color: #323640;
-  color: #fff;
+  background-color: var(--neo-dark-blue);
+  color: var(--neo-off-white);
   display: flex;
   flex-flow: row;
   gap: 10px;
@@ -9,13 +9,13 @@
 }
 
 .side-nav {
-  background-color: #171a21;
-  color: #fff;
+  background-color: var(--neo-dark-blue-alt);
+  color: var(--neo-off-white);
   min-width: 300px;
   width: 10vw;
 
   .nav-header {
-    background-color: #da4167;
+    background-color: var(--neo-magenta);
   }
 
   .nav-header,
@@ -28,16 +28,16 @@
   }
 
   .nav-item {
-    border-bottom: 1px solid rgba(#fff, 0.3);
+    border-bottom: 1px solid rgba(var(--neo-off-white-rgb), 0.3);
     font-size: 18px;
     cursor: pointer;
 
     &.active {
-      color: #da4167;
+      color: var(--neo-magenta);
     }
 
     &:hover {
-      box-shadow: inset 0 0 10vw 100px rgba(#fff, 0.3);
+      box-shadow: inset 0 0 10vw 100px rgba(var(--neo-off-white-rgb), 0.3);
     }
   }
 }
