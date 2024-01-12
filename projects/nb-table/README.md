@@ -26,7 +26,7 @@ Are you an Angular developer looking for an intuitive way to manage and display 
 npm install @neoburst/table
 ```
 
-And include our predefined table stylesheet in to the root stylesheet of your project:
+And include our predefined table stylesheet in the root stylesheet of your project:
 
 ```scss
 @import "@neoburst/table";

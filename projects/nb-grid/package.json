@@ -1,6 +1,6 @@
 {
   "name": "@neoburst/grid",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "scripts": {
     "pack": "ng-packagr -p ng-package.json"
   },
@@ -12,7 +12,9 @@
     "neoburst",
     "reactive grid",
     "grid",
-    "grid display"
+    "grid display",
+    "drag and drop grid",
+    "resize grid"
   ],
   "peerDependencies": {
     "@angular/common": "^17.0.2",
@@ -26,7 +28,8 @@
   },
   "exports": {
     ".": {
-      "sass": "./src/styles/_nb-grid.scss"
+      "sass": "./src/styles/_nb-grid.scss",
+      "asset": "./src/assets/*"
     }
   },
   "sideEffects": false,
