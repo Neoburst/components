@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { NbGridService } from './nb-grid.service';
-import { NbGridItem } from '../../../../dist/nb-grid';
+import { NbGridItem } from './directives/nb-grid-item.directive';
 
 describe('NbGridService', () => {
   let service: NbGridService;
