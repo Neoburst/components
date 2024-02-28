@@ -8,17 +8,16 @@
 
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
-  ContentChildren,
+  CreateEffectOptions,
   EventEmitter,
   Input,
   OnDestroy,
   OnInit,
   Output,
-  QueryList,
   Signal,
   computed,
+  contentChildren,
   effect,
 } from '@angular/core';
 import { filter, map, Subject, switchMap, takeUntil, timer } from 'rxjs';
@@ -44,6 +43,13 @@ interface DragHeaderEvent {
   dragHeader: DragHeader;
   newIndex: number;
 }
+
+const createEffect = <T>(signal: Signal<T>, callback: (value: T) => void, options?: CreateEffectOptions): void => {
+  effect(() => {
+    const value = signal();
+    callback(value);
+  }, options);
+};
 
 @Component({
   selector: 'nb-table',
@@ -75,23 +81,8 @@ export class NbTableComponent<T> implements OnInit, OnDestroy {
     this.selectedHeaders = columns;
   }
 
-  @ContentChildren(NbTableDirectiveImpl) set cells(_cells: QueryList<NbTableDirective>) {
-    this._directiveContainer = new DirectiveContainer(_cells);
-    this.headerRows = this._directiveContainer.getHeaderRowDirectives();
-    this._originalColumnHeaders = this._directiveContainer.getColumnHeaderDirectives();
-    this.columnHeaders = Object.assign([], this._originalColumnHeaders);
-    this.tableRows = this._directiveContainer.getRowDirectives();
-    this.expandableRows = this._directiveContainer.getExpandableRowDirectives();
-    this._originalTableCells = this._directiveContainer.getColumnCellDirectives();
-    this.tableCells = Object.assign([], this._originalTableCells);
-
-    this._tableService.setColumns(this._originalColumnHeaders.map((h) => h.column));
-  }
-
-  @ContentChildren(NbTableRowDirective) set rows(_rows: QueryList<NbTableRowDirective>) {
-    if (!_rows) return;
-    this._tableService.setTableRows(_rows.toArray());
-  }
+  private _tableCellDirectives = contentChildren(NbTableDirectiveImpl);
+  private _tableRowDirectives = contentChildren(NbTableRowDirective);
 
   /**
    * The selected columns that have to been dragged to the top of the table.
@@ -110,7 +101,7 @@ export class NbTableComponent<T> implements OnInit, OnDestroy {
   expandableRows!: NbRowDirective[];
   tableCells!: NbColumnCellDirective[];
 
-  columnTemplate!: string;
+  columnTemplate = this._tableService.columnTemplate;
 
   private _originalColumnHeaders!: NbColumnHeaderDirective[];
   private _originalTableCells!: NbColumnCellDirective[];
@@ -124,40 +115,15 @@ export class NbTableComponent<T> implements OnInit, OnDestroy {
   private _dragLeave = new Subject<HTMLElement | undefined>();
   private _unsubscriber = new Subject<void>();
 
-  constructor (private _cd: ChangeDetectorRef, private _tableService: NbTableService<T>) {
+  constructor (private _tableService: NbTableService<T>) {
     this._tableService.stable$.pipe(takeUntil(this._unsubscriber)).subscribe((stable) => {
       if (stable) this._rearrangeColumns();
     });
 
-    // TODO - move effects to private functions
-    effect(() => {
-      const css = window.document.styleSheets[0];
-      const dataLength = this.dataSourceLength();
-
-      /** 
-       * dynamically create the css grid rules for the table
-       * based on the number of rows in the data source
-       * since we cannot guess the length of the provided data source
-       */
-      for (let i = 1; i <= dataLength; i++) {
-        css.insertRule(`
-            .nb-span-${i} {
-              grid-row-start: span ${i};
-            }
-          `);
-      }
-    });
-
-    effect(() => {
-      const sorts = this._tableService.tableSorts();
-      this.sortedColumns.emit(sorts);
-    });
-
-    effect(() => {
-      const template = this._tableService.columnTemplate();
-      this.columnTemplate = template;
-      this._cd.detectChanges();
-    });
+    createEffect(this._tableCellDirectives, this._handleTableDirectives, { allowSignalWrites: true });
+    createEffect(this._tableRowDirectives, (tableRowDirectives) => this._tableService.setTableRows(tableRowDirectives));
+    createEffect(this.dataSourceLength, this._createSpanStyleClasses);
+    createEffect(this._tableService.tableSorts, (sorts) => this.sortedColumns.emit(sorts));
   }
 
   ngOnInit(): void {
@@ -225,6 +191,40 @@ export class NbTableComponent<T> implements OnInit, OnDestroy {
     this.selectedHeaders = [...this.selectedHeaders];
     this._rearrangeColumns();
   }
+
+  private _handleTableDirectives = (tableDirectives: readonly NbTableDirective[]): void => {
+    this._directiveContainer = new DirectiveContainer(tableDirectives);
+
+    this.headerRows = this._directiveContainer.getHeaderRowDirectives();
+    this.tableRows = this._directiveContainer.getRowDirectives();
+    this.expandableRows = this._directiveContainer.getExpandableRowDirectives();
+
+    this._originalColumnHeaders = this._directiveContainer.getColumnHeaderDirectives();
+    this._originalTableCells = this._directiveContainer.getColumnCellDirectives();
+
+    this.columnHeaders = Object.assign([], this._originalColumnHeaders);
+    this.tableCells = Object.assign([], this._originalTableCells);
+
+    // TODO - figure out a way to not write to a signal in an effect
+    this._tableService.setColumns(this._originalColumnHeaders.map((h) => h.column));
+  };
+
+  private _createSpanStyleClasses = (length: number): void => {
+    const css = window.document.styleSheets[0];
+
+    /**
+     * dynamically create the css grid rules for the table
+     * based on the number of rows in the data source
+     * since we cannot guess the length of the provided data source
+     */
+    for (let i = 1; i <= length; i++) {
+      css.insertRule(`
+            .nb-span-${i} {
+              grid-row-start: span ${i};
+            }
+          `);
+    }
+  };
 
   private _rearrangeColumns(): void {
     this.selectedColumns.emit(this.selectedHeaders);

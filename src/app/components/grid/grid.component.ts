@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, DoCheck } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NbGridComponent, NbGridItem, NbGridItemDirective } from 'projects/nb-grid/src/public-api';
 import { GridTileComponent } from './grid-tile/grid-tile.component';
+import { Timer } from '../../helper/timer';
 
 interface Tile {
   color: string;
@@ -16,7 +17,7 @@ interface Tile {
   templateUrl: './grid.component.html',
   styleUrl: './grid.component.scss'
 })
-export class GridComponent {
+export class GridComponent implements DoCheck, AfterViewInit {
   gridItem = { cols: 2, rows: 1 };
 
   tiles: Tile[] = [
@@ -52,6 +53,16 @@ export class GridComponent {
     { text: 'Thirty', color: 'lightgreen' },
     { text: 'Thirty-one', color: 'lightpink' },
   ].map((tile) => this._addGridItem(tile));
+
+  private _timer!: Timer;
+
+  ngDoCheck(): void {
+    this._timer = new Timer('NbGrid');
+  }
+
+  ngAfterViewInit(): void {
+    this._timer.stop();
+  }
 
   handleChange(gridItems: NbGridItem[]): void {
     console.log('gridItems', gridItems);

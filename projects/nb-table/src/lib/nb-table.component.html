@@ -21,7 +21,7 @@
 
 @if (dataSource(); as dataSource) {
 <div class="nb-table"
-     [style.--columnTemplate]="columnTemplate"
+     [style.--columnTemplate]="columnTemplate()"
      #nbTable>
 
   <!-- Table header -->

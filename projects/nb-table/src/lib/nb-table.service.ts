@@ -52,7 +52,7 @@ export class NbTableService<T> {
   columnTemplate!: Signal<string>;
   private _columns: WritableSignal<string[]> = signal([]);
   private _selectedColumns: WritableSignal<string[]> = signal([]);
-  private _tableRows?: NbTableRowDirective[];
+  private _tableRows?: readonly NbTableRowDirective[];
 
   private _hoveredRow: WritableSignal<number | undefined> = signal(undefined);
 
@@ -106,7 +106,7 @@ export class NbTableService<T> {
    * Sets the table rows.
    * @param rows The table rows.
    */
-  setTableRows(rows: NbTableRowDirective[]): void {
+  setTableRows(rows: readonly NbTableRowDirective[]): void {
     this._tableRows = rows;
   }
 
@@ -114,11 +114,11 @@ export class NbTableService<T> {
    * Returns the table rows.
    * @returns The table rows.
    */
-  getTableRows(): NbTableRowDirective[] | undefined {
+  getTableRows(): readonly NbTableRowDirective[] | undefined {
     return this._tableRows;
   }
 
-  /** 
+  /**
    * Registers a cell for rendering. This is used to determine if the table is stable or not.
   */
   registerCell(cellId: string): void {
@@ -128,7 +128,7 @@ export class NbTableService<T> {
     this._cellRenderQueueB$.next(this._cellRenderQueue);
   }
 
-  /** 
+  /**
    * Unregisters a cell for rendering. This is used to determine if the table is stable or not.
   */
   unregisterCell(cellId: string): void {

@@ -1,6 +1,6 @@
 {
   "name": "@neoburst/table",
-  "version": "2.0.5",
+  "version": "2.1.0",
   "scripts": {
     "pack": "ng-packagr -p ng-package.json"
   },
@@ -13,16 +13,16 @@
     "reactive table"
   ],
   "peerDependencies": {
-    "@angular/animations": "^17.0.2",
-    "@angular/common": "^17.0.2",
-    "@angular/core": "^17.0.2",
+    "@angular/animations": "^17.2.1",
+    "@angular/common": "^17.2.1",
+    "@angular/core": "^17.2.1",
     "rxjs": "~7.8.1"
   },
   "publishConfig": {
     "access": "public"
   },
   "dependencies": {
-    "tslib": "^2.3.0"
+    "tslib": "^2.6.2"
   },
   "exports": {
     ".": {

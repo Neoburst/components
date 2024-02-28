@@ -6,7 +6,7 @@
  * found in the LICENSE file in the root of the source tree.
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 
 @Component({
   standalone: true,
@@ -15,17 +15,10 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./nb-icon.component.scss']
 })
 export class NbIconComponent {
-  private _icon!: string;
+  private _iconId = input.required<string>({ alias: 'icon' });
+  icon = computed(() => `#${this._iconId()}`);
 
-  @Input({ required: true }) set icon(id: string) {
-    this._icon = `#${id}`;
-  }
-
-  get icon(): string {
-    return this._icon;
-  }
-
-  @Input() color?: string;
-  @Input() size?: string;
-  @Input() strokeWidth?: number;
+  color = input<string | undefined>();
+  size = input<string | undefined>();
+  strokeWidth = input<number | undefined>();
 }

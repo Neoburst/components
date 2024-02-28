@@ -1,7 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import { NbGridItem } from './directives/nb-grid-item.directive';
 
-type GridItemState = { [key: string]: NbGridItem; };
+export type GridItemState = { [key: string]: NbGridItem; };
 
 @Injectable()
 export class NbGridService {
