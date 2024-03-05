@@ -1,6 +1,6 @@
 {
   "name": "@neoburst/grid",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "scripts": {
     "pack": "ng-packagr -p ng-package.json"
   },
@@ -17,14 +17,14 @@
     "resize grid"
   ],
   "peerDependencies": {
-    "@angular/common": "^17.0.2",
-    "@angular/core": "^17.0.2"
+    "@angular/common": "^17.2.3",
+    "@angular/core": "^17.2.3"
   },
   "publishConfig": {
     "access": "public"
   },
   "dependencies": {
-    "tslib": "^2.3.0"
+    "tslib": "^2.6.2"
   },
   "exports": {
     ".": {

@@ -1,7 +1,15 @@
+/**
+ * @license
+ * Copyright Neoburst All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file in the root of the source tree.
+ */
+
 import { Injectable, signal } from '@angular/core';
 import { NbGridItem } from './directives/nb-grid-item.directive';
 
-type GridItemState = { [key: string]: NbGridItem; };
+export type GridItemState = { [key: string]: NbGridItem; };
 
 @Injectable()
 export class NbGridService {
