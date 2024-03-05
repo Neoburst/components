@@ -1,8 +1,3 @@
-// module.exports = {
-//   preset: 'jest-preset-angular',
-//   transformIgnorePatterns: ['node_modules/(?!.*\\.mjs$)'],
-// };
-
 const { pathsToModuleNameMapper } = require('ts-jest');
 const { defaultTransformerOptions } = require('jest-preset-angular/presets');
 // In the following statement, replace `./tsconfig` with the path to your `tsconfig` file
