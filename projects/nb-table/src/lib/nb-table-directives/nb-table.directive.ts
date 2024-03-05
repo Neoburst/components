@@ -39,6 +39,7 @@ export interface NbTableDirective {
 }
 
 @Directive({
+  standalone: true,
   selector: '[nbTable]',
 })
 export class NbTableDirectiveImpl implements NbTableDirective {
@@ -46,6 +47,7 @@ export class NbTableDirectiveImpl implements NbTableDirective {
 }
 
 @Directive({
+  standalone: true,
   selector: '[nbColumnHeader]',
   providers: [
     { provide: NbTableDirectiveImpl, useExisting: NbColumnHeaderDirective },
@@ -63,6 +65,7 @@ export class NbColumnHeaderDirective implements NbTableDirective {
 }
 
 @Directive({
+  standalone: true,
   selector: '[nbColumnCell]',
   providers: [
     { provide: NbTableDirectiveImpl, useExisting: NbColumnCellDirective },
@@ -80,6 +83,7 @@ export class NbColumnCellDirective implements NbTableDirective {
 }
 
 @Directive({
+  standalone: true,
   selector: '[nbHeaderRow]',
   providers: [{ provide: NbTableDirectiveImpl, useExisting: NbHeaderRowDirective }],
 })
@@ -90,6 +94,7 @@ export class NbHeaderRowDirective implements NbTableDirective {
 }
 
 @Directive({
+  standalone: true,
   selector: '[nbRow]',
   providers: [{ provide: NbTableDirectiveImpl, useExisting: NbRowDirective }],
 })
@@ -109,6 +114,7 @@ export class NbRowDirective implements NbTableDirective {
 }
 
 @Directive({
+  standalone: true,
   selector: '[nbTableRow]',
 })
 export class NbTableRowDirective {
@@ -132,6 +138,7 @@ export class NbTableRowDirective {
 }
 
 @Directive({
+  standalone: true,
   selector: '[nbExpandableRow]',
 })
 export class NbExpandableRowDirective<C> {
@@ -170,6 +177,7 @@ export class NbExpandableRowDirective<C> {
 }
 
 @Directive({
+  standalone: true,
   selector: '[nbHeaderCell]',
   providers: [],
 })
@@ -283,6 +291,7 @@ export class NbHeaderCellDirective implements OnInit {
 }
 
 @Directive({
+  standalone: true,
   selector: '[nbCell]',
   providers: [],
 })

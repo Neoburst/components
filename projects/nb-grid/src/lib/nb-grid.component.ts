@@ -1,7 +1,34 @@
-import { ChangeDetectionStrategy, Component, ContentChildren, ElementRef, EventEmitter, Input, Output, QueryList, effect, signal } from '@angular/core';
+/**
+ * @license
+ * Copyright Neoburst All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file in the root of the source tree.
+ */
+
+import {
+  ChangeDetectionStrategy,
+  Component,
+  CreateEffectOptions,
+  ElementRef,
+  EventEmitter,
+  Input,
+  Output,
+  Signal,
+  contentChildren,
+  effect,
+  signal
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NbGridItem, NbGridItemDirective } from './directives/nb-grid-item.directive';
-import { NbGridService } from './nb-grid.service';
+import { GridItemState, NbGridService } from './nb-grid.service';
+
+const createEffect = <T>(signal: Signal<T>, callback: (value: T) => void, options?: CreateEffectOptions): void => {
+  effect(() => {
+    const value = signal();
+    callback(value);
+  }, options);
+};
 
 @Component({
   selector: 'nb-grid',
@@ -23,10 +50,6 @@ import { NbGridService } from './nb-grid.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NbGridComponent {
-  @ContentChildren(NbGridItemDirective) set gridElements(dirs: QueryList<NbGridItemDirective>) {
-    dirs.forEach((dir) => this._configureDrag(dir));
-  }
-
   @Input() set columns(cols: number) {
     this._element.nativeElement.style.setProperty('--cols', String(cols));
   }
@@ -43,6 +66,8 @@ export class NbGridComponent {
     this._element.nativeElement.classList.toggle('active-resizers', displayResizers);
   }
 
+  gridElements = contentChildren(NbGridItemDirective);
+
   @Output() valueChange = new EventEmitter<NbGridItem[]>();
 
   private _draggedElement = signal<HTMLElement | undefined>(undefined);
@@ -50,16 +75,18 @@ export class NbGridComponent {
   constructor (private _element: ElementRef<HTMLElement>, private _nbGridService: NbGridService) {
     this._element.nativeElement.classList.add('nb-grid');
 
-    effect(() => {
-      const gridItemState = this._nbGridService.gridItemState();
-      const gridItems = Array.from(this._element.nativeElement.children)
-        .filter((el): el is HTMLElement => el instanceof HTMLElement)
-        .map((el) => el.attributes.getNamedItem('nb-grid-item')?.value)
-        .map((id) => id ? gridItemState[id] : undefined)
-        .filter((item): item is NbGridItem => !!item);
-      this.valueChange.emit(gridItems);
-    });
+    createEffect(this.gridElements, (dirs) => dirs.forEach((dir) => this._configureDrag(dir)));
+    createEffect(this._nbGridService.gridItemState, this._handleStateChanges);
   }
+
+  private _handleStateChanges = (gridItemState: GridItemState): void => {
+    const gridItems = Array.from(this._element.nativeElement.children)
+      .filter((el): el is HTMLElement => el instanceof HTMLElement)
+      .map((el) => el.attributes.getNamedItem('nb-grid-item')?.value)
+      .map((id) => id ? gridItemState[id] : undefined)
+      .filter((item): item is NbGridItem => !!item);
+    this.valueChange.emit(gridItems);
+  };
 
   private _configureDrag(dir: NbGridItemDirective): void {
     const element = dir.gridElement;

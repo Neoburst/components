@@ -6,7 +6,6 @@
  * found in the LICENSE file in the root of the source tree.
  */
 
-import { QueryList } from '@angular/core';
 import {
   NbTableDirective,
   NbColumnCellDirective,
@@ -16,7 +15,7 @@ import {
 } from './nb-table.directive';
 
 export class DirectiveContainer {
-  constructor (private _directives: QueryList<NbTableDirective>) { }
+  constructor (private _directives: NbTableDirective[]) { }
 
   /**
    * Get the column header directives. {@link NbColumnHeaderDirective}
